@@ -1,19 +1,34 @@
-const loadData = async (city) => {
-  const url = `https://api.openweathermap.org/data/2.5/find?q=${city}&appid=9d1e73b14be4ab89a291a724a24aa7e2`;
-  const response = await fetch(url);
-  const data = await response.json();
-  let temperature = data.list[0].main.temp - 273.15;
-  getTemperature(Math.floor(temperature));
+const API_KEY = `f89550a1bfcd474cdaa62ebb1e0f0472`;
+const defaultYTemperature = () => {
+  const city = document.getElementById("city-name").value;
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=Dhaka&appid=${API_KEY}&units=metric`;
+
+  fetch(url)
+    .then((res) => res.json())
+    .then((data) => displayTemperature(data));
+};
+defaultYTemperature();
+
+const searchTemperature = () => {
+  const city = document.getElementById("city-name").value;
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`;
+
+  fetch(url)
+    .then((res) => res.json())
+    .then((data) => displayTemperature(data));
 };
 
-const getTemperature = (temperature) => {
-  document.getElementById("weather").innerText = temperature;
-  document.getElementById("weather-h1").style.display = "block";
+const setInnerText = (id, text) => {
+  document.getElementById(id).innerText = text;
 };
 
-const getCity = () => {
-  const cityName = document.getElementById("search-bar").value;
-  document.getElementById("city-name").innerText = cityName;
-  loadData(cityName);
-  document.getElementById("search-bar").value = "";
+const displayTemperature = (temperature) => {
+  document.getElementById("city-name").value = "";
+  setInnerText("city", temperature.name);
+  setInnerText("temperature", temperature.main.temp);
+  setInnerText("condition", temperature.weather[0].main);
+  // set weather icon
+  const url = `http://openweathermap.org/img/wn/${temperature.weather[0].icon}@2x.png`;
+  const imgIcon = document.getElementById("weather-icon");
+  imgIcon.setAttribute("src", url);
 };
