@@ -1,13 +1,11 @@
 const API_KEY = `f89550a1bfcd474cdaa62ebb1e0f0472`;
-const defaultYTemperature = () => {
-  const city = document.getElementById("city-name").value;
+const defaultTemperature = () => {
   const url = `https://api.openweathermap.org/data/2.5/weather?q=Dhaka&appid=${API_KEY}&units=metric`;
-
   fetch(url)
     .then((res) => res.json())
     .then((data) => displayTemperature(data));
 };
-defaultYTemperature();
+defaultTemperature();
 
 const searchTemperature = () => {
   const city = document.getElementById("city-name").value;
@@ -24,7 +22,10 @@ const setInnerText = (id, text) => {
 
 const displayTemperature = (temperature) => {
   document.getElementById("city-name").value = "";
-  setInnerText("city", temperature.name);
+  setInnerText(
+    "city",
+    temperature.name ? temperature.name : "City Name not found"
+  );
   setInnerText("temperature", temperature.main.temp);
   setInnerText("condition", temperature.weather[0].main);
   // set weather icon
